@@ -1,0 +1,6 @@
+{
+  "name": "KoreanSkinCare — The Seoul Edit",
+  "description": "A considered edit of skincare essentials, from Seoul to Pakistan.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
