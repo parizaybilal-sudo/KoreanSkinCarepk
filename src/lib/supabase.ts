@@ -8,22 +8,26 @@ const env =
       ? (process.env as Record<string, string | undefined>)
       : {};
 
-const supabaseUrl = env["VITE_SUPABASE_URL"] || env["VITE_PUBLIC_SUPABASE_URL"] || "";
+const DEFAULT_SUPABASE_URL = "https://whyzbmsyihcbitpfkces.supabase.co";
+const DEFAULT_SUPABASE_KEY = "sb_publishable_MePqYuXWZj0I3aQbguRkqQ_04bNIes7";
 
-const supabaseAnonKey =
+const rawUrl = env["VITE_SUPABASE_URL"] || env["VITE_PUBLIC_SUPABASE_URL"] || "";
+const rawKey =
   env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
   env["VITE_SUPABASE_ANON_KEY"] ||
   env["VITE_PUBLIC_SUPABASE_ANON_KEY"] ||
   "";
 
+const supabaseUrl = rawUrl && !rawUrl.includes("your-project-id") ? rawUrl : DEFAULT_SUPABASE_URL;
+
+const supabaseAnonKey = rawKey && !rawKey.includes("your-supabase") ? rawKey : DEFAULT_SUPABASE_KEY;
+
 export const isSupabaseConfigured = (): boolean => {
   return (
     typeof supabaseUrl === "string" &&
     supabaseUrl.trim().length > 0 &&
-    !supabaseUrl.includes("your-project-id") &&
     typeof supabaseAnonKey === "string" &&
-    supabaseAnonKey.trim().length > 0 &&
-    !supabaseAnonKey.includes("your-supabase")
+    supabaseAnonKey.trim().length > 0
   );
 };
 

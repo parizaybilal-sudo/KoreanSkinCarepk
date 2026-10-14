@@ -36,6 +36,7 @@ import {
   getProducts,
   resolveProductImageUrl,
   SLUG_TO_UPLOADED_GALLERY,
+  SLUG_TO_UPLOADED_VIDEOS,
 } from "@/lib/store-service";
 import type { DBProduct } from "@/lib/supabase";
 
@@ -110,7 +111,14 @@ export const Route = createFileRoute("/products/$slug")({
           is_primary: idx === 0,
           display_order: idx,
         })),
-        videos: [],
+        videos: (SLUG_TO_UPLOADED_VIDEOS[fallback.slug] || []).map((v, idx) => ({
+          id: `vid-${fallback.slug}-${idx + 1}`,
+          product_id: `prod-${fallback.slug}`,
+          video_url: v.video_url,
+          thumbnail_url: null,
+          title: v.title,
+          display_order: idx,
+        })),
         sections: [
           {
             id: "s1",
@@ -559,18 +567,18 @@ function ProductPage() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {p.videos.map((vid, i) => (
                 <div
                   key={vid.id || i}
-                  className="bg-card border rounded-xl overflow-hidden shadow-sm"
+                  className="bg-card border rounded-xl overflow-hidden shadow-sm flex flex-col"
                 >
-                  <div className="relative aspect-video bg-black">
+                  <div className="relative bg-black flex items-center justify-center">
                     <video
                       controls
                       playsInline
                       preload="metadata"
-                      className="w-full h-full object-cover"
+                      className="w-full max-h-[540px] object-contain"
                     >
                       <source
                         src={
@@ -584,7 +592,7 @@ function ProductPage() {
                       Your browser does not support HTML5 video playback.
                     </video>
                   </div>
-                  <div className="p-4 bg-secondary/20 flex items-center justify-between">
+                  <div className="p-4 bg-secondary/20 flex items-center justify-between mt-auto">
                     <div>
                       <h3 className="font-serif text-sm font-semibold">{vid.title}</h3>
                       <span className="text-[10px] text-muted-foreground">

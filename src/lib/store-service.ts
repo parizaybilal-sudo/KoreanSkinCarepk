@@ -126,40 +126,75 @@ const LEGACY_ASSET_URL_MAP: Record<string, string> = {
 export const SLUG_TO_UPLOADED_GALLERY: Record<string, string[]> = {
   "arencia-vitamin-c": [
     `${SUPABASE_MEDIA_BASE}/products/1791959369045-wicadg.png`,
-    `${SUPABASE_MEDIA_BASE}/products/1791959538273-1huwbc.png`,
     `${SUPABASE_MEDIA_BASE}/products/1791959549187-an7n5x.png`,
+    `${SUPABASE_MEDIA_BASE}/products/1791959538273-1huwbc.png`,
   ],
   "medicube-collagen-mask": [
     `${SUPABASE_MEDIA_BASE}/products/1791959583980-szobvk.png`,
-    `${SUPABASE_MEDIA_BASE}/products/1791959609151-apm968.png`,
     `${SUPABASE_MEDIA_BASE}/products/1791959634675-ny0962.png`,
+    `${SUPABASE_MEDIA_BASE}/products/1791959609151-apm968.png`,
   ],
   "skin1004-centella": [
     `${SUPABASE_MEDIA_BASE}/products/1791959678180-imdqzd.png`,
-    `${SUPABASE_MEDIA_BASE}/products/1791959698785-3zrwe4.png`,
     `${SUPABASE_MEDIA_BASE}/products/1791959708562-ticzo2.png`,
+    `${SUPABASE_MEDIA_BASE}/products/1791959698785-3zrwe4.png`,
   ],
   "simplist-glycolic-toner": [
     `${SUPABASE_MEDIA_BASE}/products/1791959732187-egs1lo.png`,
-    `${SUPABASE_MEDIA_BASE}/products/1791959743671-eh2o6j.png`,
+    `${SUPABASE_MEDIA_BASE}/products/1791960030778-gefzss.png`,
     `${SUPABASE_MEDIA_BASE}/products/1791959759713-60bi9s.png`,
   ],
   "laneige-water-mask": [
     `${SUPABASE_MEDIA_BASE}/products/1791959794299-bpbcln.png`,
-    `${SUPABASE_MEDIA_BASE}/products/1791959805115-ilfhvu.png`,
+    `${SUPABASE_MEDIA_BASE}/products/1791960060417-mo5moo.png`,
     `${SUPABASE_MEDIA_BASE}/products/1791959811976-7dxysc.png`,
   ],
 };
 
-const SLUG_TO_UPLOADED_VIDEOS: Record<string, Array<{ video_url: string; title: string }>> = {
+export const SLUG_TO_UPLOADED_VIDEOS: Record<
+  string,
+  Array<{ video_url: string; title: string }>
+> = {
   "arencia-vitamin-c": [
     {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791960438548-gfnn9i.mp4`,
+      title: "Arencia Vitamin C Booster Shot, Customers Honest Review",
+    },
+    {
       video_url: `${SUPABASE_MEDIA_BASE}/videos/1791961732354-4f676x.mp4`,
-      title: "Vitamin C Booster Shot — Application & Texture Guide",
+      title: "Arencia Vitamin C Booster Shot, Customers Honest Review",
     },
     {
       video_url: `${SUPABASE_MEDIA_BASE}/videos/1791961738326-pojuvb.mp4`,
-      title: "Vitamin C Booster Shot — Daily Glow Ritual",
+      title: "Arencia Vitamin C Booster Shot, Customers Honest Review",
+    },
+  ],
+  "medicube-collagen-mask": [
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965750851-pzu00h.mp4`,
+      title: "medicube Collagen Night Wrapping Mask, Customers Honest Review",
+    },
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965761360-ccj5r0.mp4`,
+      title: "medicube Collagen Night Wrapping Mask, Customers Honest Review",
+    },
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965770219-5uhlj3.mp4`,
+      title: "medicube Collagen Night Wrapping Mask, Customers Honest Review",
+    },
+  ],
+  "skin1004-centella": [
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965883861-41znxk.mp4`,
+      title: "SKIN1004 Madagascar Centella Ampoule, Customers Honest Review",
+    },
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965962383-pznsz8.mp4`,
+      title: "SKIN1004 Madagascar Centella Ampoule, Customers Honest Review",
+    },
+    {
+      video_url: `${SUPABASE_MEDIA_BASE}/videos/1791965981136-i7dytd.mp4`,
+      title: "SKIN1004 Madagascar Centella Ampoule, Customers Honest Review",
     },
   ],
 };
@@ -663,7 +698,7 @@ export async function getProducts(onlyPublished = false): Promise<DBProduct[]> {
       ? prod.videos.map((v) => ({ ...v, thumbnail_url: null }))
       : [];
     vids.sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
-    if (vids.length === 0 && !prod.is_user_modified && seed?.videos && seed.videos.length > 0) {
+    if (vids.length === 0 && seed?.videos && seed.videos.length > 0) {
       vids = seed.videos;
     }
 
@@ -752,7 +787,9 @@ export async function getProducts(onlyPublished = false): Promise<DBProduct[]> {
           ? normalizedCached.images
           : normalizedBase.images,
       videos:
-        normalizedCached.videos !== undefined ? normalizedCached.videos : normalizedBase.videos,
+        normalizedCached.videos && normalizedCached.videos.length > 0
+          ? normalizedCached.videos
+          : normalizedBase.videos,
       sections:
         normalizedCached.sections && normalizedCached.sections.length > 0
           ? normalizedCached.sections
